@@ -31,6 +31,12 @@
       color: var(--color-text-dark);
     }
 
+    .scale-wrapper {
+      transform-origin: top center;
+      display: flex;
+      justify-content: center;
+    }
+
     .container {
       max-width: 420px;
       margin: 0 auto;
@@ -315,10 +321,19 @@
     }
 
     @media (max-width: 480px) {
+      body {
+        overflow-x: hidden;
+      }
+
+      .scale-wrapper {
+        transform: scale(0.85);
+      }
+
       .container {
-        max-width: 100%;
+        max-width: 420px;
         box-shadow: none;
       }
+
       .header {
         border-radius: 0;
       }
@@ -326,46 +341,48 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- 헤더 -->
-    <div class="header">
-      <div class="header-content">
-        <div class="header-label">
-          <span class="header-label-icon">✈️</span>
-          <span>TRAVEL PLANNER</span>
-        </div>
-        <div class="header-title">상하이 4박 5일</div>
-        <div class="header-meta-row">
-          <div class="meta-item">
-            <span>2026.01.16 - 01.20</span>
+  <div class="scale-wrapper">
+    <div class="container">
+      <!-- 헤더 -->
+      <div class="header">
+        <div class="header-content">
+          <div class="header-label">
+            <span class="header-label-icon">✈️</span>
+            <span>TRAVEL PLANNER</span>
           </div>
-        </div>
+          <div class="header-title">상하이 4박 5일</div>
+          <div class="header-meta-row">
+            <div class="meta-item">
+              <span>2026.01.16 - 01.20</span>
+            </div>
+          </div>
 
-        <!-- 진행률 -->
-        <div class="progress-row">
-          <div class="progress-texts">
-            <div class="progress-label">여행 진행률</div>
-            <div class="progress-percent" id="progressPercent">0%</div>
-          </div>
-          <div class="progress-gauge">
-            <div class="progress-gauge-fill" id="progressGaugeFill"></div>
+          <!-- 진행률 -->
+          <div class="progress-row">
+            <div class="progress-texts">
+              <div class="progress-label">여행 진행률</div>
+              <div class="progress-percent" id="progressPercent">0%</div>
+            </div>
+            <div class="progress-gauge">
+              <div class="progress-gauge-fill" id="progressGaugeFill"></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Day Tabs -->
-    <div class="day-tabs" id="dayTabs">
-      <button class="day-tab active" data-day="0">Day 1</button>
-      <button class="day-tab" data-day="1">Day 2</button>
-      <button class="day-tab" data-day="2">Day 3</button>
-      <button class="day-tab" data-day="3">Day 4</button>
-      <button class="day-tab" data-day="4">Day 5</button>
-    </div>
+      <!-- Day Tabs -->
+      <div class="day-tabs" id="dayTabs">
+        <button class="day-tab active" data-day="0">Day 1</button>
+        <button class="day-tab" data-day="1">Day 2</button>
+        <button class="day-tab" data-day="2">Day 3</button>
+        <button class="day-tab" data-day="3">Day 4</button>
+        <button class="day-tab" data-day="4">Day 5</button>
+      </div>
 
-    <!-- Content -->
-    <div class="content">
-      <div id="dayContent"></div>
+      <!-- Content -->
+      <div class="content">
+        <div id="dayContent"></div>
+      </div>
     </div>
   </div>
 
