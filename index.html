@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>상하이 4박 5일 여행 플래너</title>
+  <style>
+    :root {
+      --color-red-primary: #e50914;
+      --color-red-dark: #b20710;
+      --color-red-light: #ff4b4b;
+      --color-text-dark: #111827;
+      --color-text-light: #6b7280;
+      --color-white: #ffffff;
+      --color-gray-light: #e5e7eb;
+      --color-gray-lighter: #f9fafb;
+      --color-blue-accent: #2563eb;
+      --color-green-accent: #16a34a;
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+      background-color: #f3f4f6;
+      color: var(--color-text-dark);
+    }
+
+    .container {
+      max-width: 420px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background-color: var(--color-white);
+      box-shadow: var(--shadow-soft);
+    }
+
+    /* 헤더 */
+    .header {
+      background: radial-gradient(circle at 0% 0%, #ff6666 0, #e50914 35%, #b00000 100%);
+      color: var(--color-white);
+      padding: 14px 18px 18px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 0%, rgba(255,255,255,0.18) 0, transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .header-label {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .header-label-icon {
+      font-size: 13px;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .header-meta-row {
+      margin-top: 2px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .meta-icon {
+      font-size: 13px;
+    }
+
+    /* 진행률 상자 */
+    .progress-row {
+      margin-top: 10px;       
+      width: 100%;
+      padding: 8px 14px;     
+      border-radius: 10px;  
+      position: relative;
+      background: rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .progress-texts {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em; 
+      opacity: 0.95;
+    }
+
+    .progress-percent {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .progress-gauge {
+      height: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-gauge-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ffe14b, #facc15, #54dc0a);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .progress-gauge-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Day 탭 */
+    .day-tabs {
+      display: flex;
+      gap: 10px;
+      padding: 24px 16px 8px;
+      justify-content: center;
+      background-color: var(--color-white);
+      border-bottom: 1px solid var(--color-gray-light);
+    }
+
+    .day-tabs::-webkit-scrollbar {
+      height: 4px;
+    }
+    .day-tabs::-webkit-scrollbar-thumb {
+      background: var(--color-gray-light);
+      border-radius: 2px;
+    }
+
+    .day-tab {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--color-gray-light);
+      background: var(--color-gray-lighter);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-dark);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day-tab.active {
+      background: var(--color-text-dark);
+      color: var(--color-white);
+      border-color: var(--color-text-dark);
+    }
+
+    .content {
+      padding: 16px 16px 24px;
+      background: var(--color-white);
+    }
+
+    /* 카드 */
+    .event-card {
+      background-color: var(--color-white);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--color-gray-light);
+      box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.1s, background 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 88px;
+      justify-content: center;
+      position: relative;
+    }
+
+    .event-card.completed {
+      background: #ecfdf3;
+      border-color: #bbf7d0;
+    }
+
+    .event-card:hover {
+      box-shadow: 0 4px 12px rgba(15,23,42,0.12);
+      transform: translateY(-1px);
+    }
+
+    .event-header {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      width: 100%;
+      padding: 0 8px;
+    }
+
+    .event-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .event-time {
+      font-size: 13px;
+      color: var(--color-blue-accent);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .event-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-dark);
+      line-height: 1.3;
+      word-break: keep-all;
+    }
+
+    .event-description {
+      font-size: 12px;
+      color: var(--color-text-light);
+      line-height: 1.4;
+    }
+
+    .event-location {
+      font-size: 11px;
+      color: var(--color-blue-accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      line-height: 1.3;
+    }
+
+    .event-location:hover {
+      text-decoration: underline;
+      color: var(--color-red-primary);
+    }
+
+    .checkbox {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 2px solid var(--color-gray-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--color-green-accent);
+      background: var(--color-white);
+      flex-shrink: 0;
+    }
+
+    .event-card.completed .checkbox {
+      background: var(--color-green-accent);
+      color: white;
+      border-color: var(--color-green-accent);
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        max-width: 100%;
+        box-shadow: none;
+      }
+      .header {
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 헤더 -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-label">
+          <span class="header-label-icon">✈️</span>
+          <span>TRAVEL PLANNER</span>
+        </div>
+        <div class="header-title">상하이 4박 5일</div>
+        <div class="header-meta-row">
+          <div class="meta-item">
+            <span>2026.01.16 - 01.20</span>
+          </div>
+        </div>
+
+        <!-- 진행률 -->
+        <div class="progress-row">
+          <div class="progress-texts">
+            <div class="progress-label">여행 진행률</div>
+            <div class="progress-percent" id="progressPercent">0%</div>
+          </div>
+          <div class="progress-gauge">
+            <div class="progress-gauge-fill" id="progressGaugeFill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day Tabs -->
+    <div class="day-tabs" id="dayTabs">
+      <button class="day-tab active" data-day="0">Day 1</button>
+      <button class="day-tab" data-day="1">Day 2</button>
+      <button class="day-tab" data-day="2">Day 3</button>
+      <button class="day-tab" data-day="3">Day 4</button>
+      <button class="day-tab" data-day="4">Day 5</button>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <div id="dayContent"></div>
+    </div>
+  </div>
+
+  <script>
+    const tripData = [
+      {
+        day: 1,
+        events: [
+          {
+            time: "16:10",
+            title: "인천공항에서 출발",
+            description: "출국하기",
+            completed: false
+          },
+          {
+            time: "17:20",
+            title: "상하이 푸둥공항 도착",
+            description: "입국 및 호텔 체크인",
+            location: "숙소",
+            searchQuery: "美利居酒店(上海城市中心人民广场店)",
+            completed: false
+          },
+          {
+            title: "네일샵 방문 및 시내 구경",
+            location: "네일샵",
+            searchQuery: "네일샵",
+            completed: false
+          },
+          {
+            title: "하이디라오(저녁)",
+            description: "중국식 샤브샤브 전문점",
+            location: "하이디라오",
+            searchQuery: "海底捞",
+            completed: false
+          }
+        ]
+      },
+      {
+        day: 2,
+        events: [
+          {
+            title: "바이롄ZX",
+            description: "애니·만화·게임 굿즈와 체험 공간이 있는 Z세대 라이프 스타일 쇼핑 센터",
+            location: "오타쿠(1)",
+            searchQuery: "百联ZX创趣场",
+            completed: false
+          },
+          {
+            title: "헌지우이치엔(점심)",
+            description: "상하이 현지인과 여행객 모두에게 인기 있는 양꼬치 전문점",
+            location: "헌지우이치엔",
+            searchQuery: "很久以前羊肉串",
+            completed: false
+          },
+          {
+            title: "조이시티",
+            description: "다양한 쇼핑, 식사, 엔터테인먼트 옵션을 갖춘 대형 복합 쇼핑몰로 젊은 층에게 인기 있는 장소",
+            location: "오타쿠(2)",
+            searchQuery: "上海静安大悦城",
+            completed: false
+          },
+          {
+            title: "난징동루",
+            description: "상하이 중심의 대표 쇼핑 거리로 현대 브랜드와 전통 상점이 공존하며 활기 넘치는 명소",
+            location: "난징동루",
+            searchQuery: "南京东路",
+            completed: false
+          },
+          {
+            title: "M&M's World",
+            description: "다양한 색상의 M&M 초콜릿과 굿즈를 판매하는 체험형 매장으로 관광객에게 인기",
+            location: "엠엔엠 월드",
+            searchQuery: "m豆巧克力世界(上海世茂广场店)",
+            completed: false
+          },
+          {
+            title: "MINI SO",
+            description: "생활용품, 캐릭터 굿즈, 소형 전자제품 등 다양한 상품을 판매하는 체험형 라이프 스타일 매장",
+            location: "미니소랜드",
+            searchQuery: "名创优品(南京东路670号店)",
+            completed: false
+          },
+          {
+            title: "Sisyphus",
+            description: "빈티지 디지털 카메라 매장",
+            location: "시시포스",
+            searchQuery: "Sisyphus·西西弗斯相机商店",
+            completed: false
+          },
+          {
+            title: "Sephora",
+            description: "화장품 매장",
+            location: "세포라",
+            searchQuery: "丝芙兰Sephora(LU·ONE凯德晶萃广场店)",
+            completed: false
+          },
+          {
+            title: "점도덕(저녁)",
+            description: "전통 딤섬과 중국식 메뉴를 즐길 수 있는 인기 중식 맛집",
+            location: "점도덕",
+            searchQuery: "点都德",
+            completed: false
+          },
+          {
+            title: "와이탄",
+            description: "상하이의 대표적인 관광지로 황푸강변의 아름다운 야경을 감상할 수 있는 곳",
+            location: "와이탄",
+            searchQuery: "外滩",
+            completed: false
+          }
+        ]
+      },
+      {
+        day: 3,
+        events: [
+          {
+            title: "우캉맨션",
+            description: "프랑스 조계지 시대의 역사적 건축물로 독특한 삼각형 외관과 유서 깊은 분위기로 유명한 명소",
+            location: "우캉맨션",
+            searchQuery: "武康大楼",
+            completed: false
+          },
+          {
+            title: "후시라오농탕미엔관(점심)",
+            description: "상하이 전통 국수와 다양한 토핑을 맛볼 수 있는 현지 인기 면관",
+            location: "후시라오농탕미엔관",
+            searchQuery: "沪西老弄堂面馆",
+            completed: false
+          },
+          {
+            title: "쇼핑",
+            description: [
+              "muchuan vintage",
+              "Shanghai Xuhui No.82, Xinle Road (Basement FG)",
+              "Shanghai Xuhui Xinle Road No.80 (Sweet Chilling, 옷)",
+              "Shanghai Xuhui Wukang Road No.55 (HARMAY Huamei, 화장품)",
+              "홀리랜드",
+              "上海市徐汇区嘉善路142号 (G3-STUDIO, 스티커 사진샵)"
+            ],
+            completed: false
+          },
+          {
+            title: "대한민국 임시정부",
+            location: "임시정부",
+            searchQuery: "大韩民国临时政府旧址",
+            completed: false
+          },
+          {
+            time: "17:00",
+            title: "예원",
+            description: "왕홍 체험 및 전통 중국 정원 감상",
+            location: "왕홍샵",
+            searchQuery: "豫见汉服体验馆 上海市黄浦区丽水路81号紫锦城负一层B39",
+            completed: false
+          },
+          {
+            title: "카오위(저녁)",
+            description: "매콤하고 향신료 풍부한 중국식 구운 생선 요리 전문점",
+            location: "카오위",
+            searchQuery: "烤鱼",
+            completed: false
+          }
+        ]
+      },
+      {
+        day: 4,
+        events: [
+          {
+            time: "11:00",
+            title: "헤드 스파",
+            location: "마사지샵(1)",
+            searchQuery: "沐森Spa·好享头域",
+            completed: false
+          },
+          {
+            title: "마라롱샤(점심)",
+            description: "매콤하고 얼얼한 마라 소스로 조리한 중국식 민물 가재 요리 전문점",
+            location: "마라롱샤",
+            searchQuery: "麻辣小龙虾",
+            completed: false
+          },
+          {
+            title: "디즈니랜드",
+            description: "디즈니의 인기 캐릭터와 테마로 꾸며진 대규모 테마파크",
+            location: "디즈니랜드",
+            searchQuery: "上海迪士尼度假区",
+            completed: false
+          },
+          {
+            time: "23:00",
+            title: "도원향",
+            location: "마사지샵(2) 남경동로 제일백화점 7층",
+            searchQuery: "桃源鄕",
+            completed: false
+          }
+        ]
+      },
+      {
+        day: 5,
+        events: [
+          {
+            title: "라오포지아(아침)",
+            description: "할머니 집 같은 편안한 분위기에서 즐기는 가정식 중식 레스토랑",
+            location: "라오포지아",
+            searchQuery: "外婆家",
+            completed: false
+          },
+          {
+            time: "11:00",
+            title: "상하이 푸둥공항으로 이동",
+            location: "푸둥공항",
+            searchQuery: "上海浦东国际机场",
+            completed: false
+          },
+          {
+            time: "14:25",
+            title: "상하이 푸둥공항에서 출발",
+            description: "출국하기",
+            completed: false
+          },
+          {
+            time: "17:25",
+            title: "인천공항 도착",
+            description: "입국 및 집 가기",
+            completed: false
+          }
+        ]
+      }
+    ];
+
+    let currentDay = 0;
+    let completedEvents = new Set();
+    const STORAGE_KEY = 'shanghai_completed_events_v1';
+    const LAST_DAY_KEY = 'shanghai_last_day_v1';
+
+    function loadCompletedEvents() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try { completedEvents = new Set(JSON.parse(saved)); }
+        catch { completedEvents = new Set(); }
+      }
+    }
+
+    function saveCompletedEvents() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...completedEvents]));
+    }
+
+    function loadLastDay() {
+      const saved = localStorage.getItem(LAST_DAY_KEY);
+      const n = parseInt(saved, 10);
+      if (!isNaN(n) && n >= 0 && n < tripData.length) currentDay = n;
+    }
+
+    function saveLastDay() {
+      localStorage.setItem(LAST_DAY_KEY, String(currentDay));
+    }
+
+    function updateProgress() {
+      const totalEvents = tripData.reduce((s, d) => s + d.events.length, 0);
+      const completedCount = completedEvents.size;
+      const percent = totalEvents === 0 ? 0 : Math.round((completedCount / totalEvents) * 100);
+      
+      document.getElementById('progressPercent').textContent = percent + '%';
+      document.getElementById('progressGaugeFill').style.width = percent + '%';
+    }
+
+    function renderDayContent(dayIndex) {
+      const day = tripData[dayIndex];
+      const contentDiv = document.getElementById('dayContent');
+
+      contentDiv.innerHTML = `
+        ${day.events.map((event, idx) => {
+          const eventId = `${dayIndex}-${idx}`;
+          const isCompleted = completedEvents.has(eventId);
+          const hasSearchQuery = event.searchQuery;
+          return `
+            <div class="event-card ${isCompleted ? 'completed' : ''}" data-event-id="${eventId}">
+              <div class="event-header">
+                <div class="event-content">
+                  ${event.time ? `<div class="event-time">${event.time}</div>` : ''}
+                  <div class="event-title">${event.title}</div>
+                  ${Array.isArray(event.description) ? 
+                    event.description.map(desc => `<div class="event-description">${desc}</div>`).join('') 
+                    : (event.description ? `<div class="event-description">${event.description}</div>` : '')
+                  }
+                  ${hasSearchQuery ? 
+                    `<div class="event-location" onclick="openAmapSearch('${event.searchQuery}'); event.stopPropagation();">
+                      📍 ${event.location}
+                    </div>` : ''
+                  }
+                </div>
+                <div class="checkbox">${isCompleted ? '✓' : ''}</div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      `;
+
+      document.querySelectorAll('.event-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.classList.contains('event-location')) return;
+          const eventId = card.dataset.eventId;
+          if (completedEvents.has(eventId)) completedEvents.delete(eventId);
+          else completedEvents.add(eventId);
+          saveCompletedEvents();
+          updateProgress();
+          renderDayContent(currentDay);
+        });
+      });
+    }
+
+    function setupDayTabs() {
+      document.querySelectorAll('.day-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          currentDay = parseInt(tab.dataset.day);
+          saveLastDay();
+          renderDayContent(currentDay);
+        });
+      });
+    }
+
+    // 🔍 Amap 검색창에 자동 입력
+    function openAmapSearch(query) {
+      const encodedQuery = encodeURIComponent(query);
+      const amapUrl = `https://www.amap.com/search?query=${encodedQuery}&city=310000`;
+      window.open(amapUrl, '_blank');
+    }
+
+    loadCompletedEvents();
+    loadLastDay();
+    setupDayTabs();
+    document.querySelectorAll('.day-tab').forEach(tab => {
+      const idx = parseInt(tab.dataset.day);
+      tab.classList.toggle('active', idx === currentDay);
+    });
+    renderDayContent(currentDay);
+    updateProgress();
+  </script>
+</body>
+</html>
