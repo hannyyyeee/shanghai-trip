@@ -31,12 +31,6 @@
       color: var(--color-text-dark);
     }
 
-    .scale-wrapper {
-      transform-origin: top center;
-      display: flex;
-      justify-content: center;
-    }
-
     .container {
       max-width: 420px;
       margin: 0 auto;
@@ -321,19 +315,10 @@
     }
 
     @media (max-width: 480px) {
-      body {
-        overflow-x: hidden;
-      }
-
-      .scale-wrapper {
-        transform: scale(0.85);
-      }
-
       .container {
-        max-width: 420px;
+        max-width: 90%;
         box-shadow: none;
       }
-
       .header {
         border-radius: 0;
       }
@@ -341,48 +326,46 @@
   </style>
 </head>
 <body>
-  <div class="scale-wrapper">
-    <div class="container">
-      <!-- 헤더 -->
-      <div class="header">
-        <div class="header-content">
-          <div class="header-label">
-            <span class="header-label-icon">✈️</span>
-            <span>TRAVEL PLANNER</span>
+  <div class="container">
+    <!-- 헤더 -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-label">
+          <span class="header-label-icon">✈️</span>
+          <span>TRAVEL PLANNER</span>
+        </div>
+        <div class="header-title">상하이 4박 5일</div>
+        <div class="header-meta-row">
+          <div class="meta-item">
+            <span>2026.01.16 - 01.20</span>
           </div>
-          <div class="header-title">상하이 4박 5일</div>
-          <div class="header-meta-row">
-            <div class="meta-item">
-              <span>2026.01.16 - 01.20</span>
-            </div>
-          </div>
+        </div>
 
-          <!-- 진행률 -->
-          <div class="progress-row">
-            <div class="progress-texts">
-              <div class="progress-label">여행 진행률</div>
-              <div class="progress-percent" id="progressPercent">0%</div>
-            </div>
-            <div class="progress-gauge">
-              <div class="progress-gauge-fill" id="progressGaugeFill"></div>
-            </div>
+        <!-- 진행률 -->
+        <div class="progress-row">
+          <div class="progress-texts">
+            <div class="progress-label">여행 진행률</div>
+            <div class="progress-percent" id="progressPercent">0%</div>
+          </div>
+          <div class="progress-gauge">
+            <div class="progress-gauge-fill" id="progressGaugeFill"></div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Day Tabs -->
-      <div class="day-tabs" id="dayTabs">
-        <button class="day-tab active" data-day="0">Day 1</button>
-        <button class="day-tab" data-day="1">Day 2</button>
-        <button class="day-tab" data-day="2">Day 3</button>
-        <button class="day-tab" data-day="3">Day 4</button>
-        <button class="day-tab" data-day="4">Day 5</button>
-      </div>
+    <!-- Day Tabs -->
+    <div class="day-tabs" id="dayTabs">
+      <button class="day-tab active" data-day="0">Day 1</button>
+      <button class="day-tab" data-day="1">Day 2</button>
+      <button class="day-tab" data-day="2">Day 3</button>
+      <button class="day-tab" data-day="3">Day 4</button>
+      <button class="day-tab" data-day="4">Day 5</button>
+    </div>
 
-      <!-- Content -->
-      <div class="content">
-        <div id="dayContent"></div>
-      </div>
+    <!-- Content -->
+    <div class="content">
+      <div id="dayContent"></div>
     </div>
   </div>
 
@@ -425,21 +408,19 @@
         events: [
           {
             title: "바이롄ZX",
-            description: "애니·만화·게임 굿즈와 체험 공간이 있는 Z세대 라이프 스타일 쇼핑 센터",
             location: "오타쿠(1)",
             searchQuery: "百联ZX创趣场",
             completed: false
           },
           {
             title: "헌지우이치엔(점심)",
-            description: "상하이 현지인과 여행객 모두에게 인기 있는 양꼬치 전문점",
+            description: "양꼬치 전문점",
             location: "헌지우이치엔",
             searchQuery: "很久以前羊肉串",
             completed: false
           },
           {
             title: "조이시티",
-            description: "다양한 쇼핑, 식사, 엔터테인먼트 옵션을 갖춘 대형 복합 쇼핑몰",
             location: "오타쿠(2)",
             searchQuery: "上海静安大悦城",
             completed: false
@@ -460,7 +441,7 @@
           },
           {
             title: "MINI SO",
-            description: "다양한 상품을 판매하는 체험형 라이프스타일 매장",
+            description: "다양한 상품을 판매하는 라이프스타일 매장",
             location: "미니소랜드",
             searchQuery: "名创优品(南京东路670号店)",
             completed: false
@@ -481,7 +462,7 @@
           },
           {
             title: "점도덕(저녁)",
-            description: "전통 딤섬과 중국식 메뉴를 즐길 수 있는 인기 중식 맛집",
+            description: "전통 딤섬",
             location: "점도덕",
             searchQuery: "点都德",
             completed: false
@@ -507,7 +488,7 @@
           },
           {
             title: "후시라오농탕미엔관(점심)",
-            description: "상하이 전통 국수를 맛볼 수 있는 현지 인기 면관",
+            description: "상하이 전통 국수집",
             location: "후시라오농탕미엔관",
             searchQuery: "沪西老弄堂面馆",
             completed: false
